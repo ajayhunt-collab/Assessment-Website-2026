@@ -1,4 +1,9 @@
-from flask import Flask
+from flask import Flask, g, render_template, request, flash, session, redirect, url_for 
+import sqlite3
+
+from werkzeug.security import generate_password_hash, check_password_hash
+
+DATABASE = "database.db"
 
 app = Flask(__name__)
 

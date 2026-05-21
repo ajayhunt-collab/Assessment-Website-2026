@@ -1,0 +1,4 @@
+-- database: ./database.db
+
+SELECT * FROM Sports
+ORDER BY `StudentID` DESC;

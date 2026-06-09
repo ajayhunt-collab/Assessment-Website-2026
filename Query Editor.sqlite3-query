@@ -1,4 +1,9 @@
 -- database: ./database.db
 
-SELECT * FROM Sports
-ORDER BY `StudentID` DESC;
+SELECT * FROM Teams
+ORDER BY TeamID ASC;
+
+SELECT * FROM Students
+ORDER BY StudentID ASC;
+
+SELECT * FROM Sports;

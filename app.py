@@ -13,6 +13,7 @@ def get_db():
     db = getattr(g, '_database', None)
     if db is None:
         db = g._database = sqlite3.connect(DATABASE)
+        db.row_factory = sqlite3.Row
     return db
 
 @app.teardown_appcontext
@@ -37,6 +38,11 @@ def write_db(query,args=(),one=False):
     cur.close()
     return (rv[0] if rv else None) if one else rv
 
+@app.route('/')
+@app.route('/home')
+def home():
+    return render_template('home.html')
+
 @app.route('/signup', methods=["GET","POST"])
 def signup():
     #if the user posts from the signup page
@@ -47,10 +53,11 @@ def signup():
         #hash it with the cool secutiry function
         hashed_password = generate_password_hash(password)
         #write it as a new user to the database
-        sql = "INSERT INTO User (Username,Password) VALUES (?,?)"
+        sql = "INSERT INTO Students (Username,Password) VALUES (?,?)"
         write_db(sql,(username,hashed_password))
         #message flashes exist in the base.html template and give user feedback
         flash("Sign Up Successful")
+        return redirect(url_for('login'))
     return render_template('signup.html')
 
 @app.route('/login', methods=["GET","POST"])
@@ -61,7 +68,7 @@ def login():
         username = request.form['username']
         password = request.form['password']
         #try to find this user in the database- note- just keepin' it simple so usernames must be unique
-        sql = "SELECT * FROM User WHERE Username = ?"
+        sql = "SELECT * FROM Student WHERE Username = ?"
         user = query_db(sql,(username,),True)
         if user:
             #we got a user!!
@@ -69,7 +76,7 @@ def login():
             if check_password_hash(user[2],password):
                 #we are logged in successfully
                 #Store the username in the session
-                session['User'] = user
+                session['Student'] = user['Username']
                 flash("Logged in successfully")
             else:
                 flash("Password incorrect")
@@ -77,6 +84,12 @@ def login():
             flash("Username does not exist")
     #render this template regardles of get/post
     return render_template('login.html')
+
+@app.route('/logout')
+def logout():
+    session.pop('User', None)
+    flash("You have been logged out")
+    return redirect(url_for('home'))
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port= 5000, debug = True) 

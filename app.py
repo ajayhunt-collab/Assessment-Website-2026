@@ -1,9 +1,11 @@
 from flask import Flask, g, render_template, request, flash, session, redirect, url_for 
 import sqlite3
+import os
 
 from werkzeug.security import generate_password_hash, check_password_hash
 
-DATABASE = "database.db"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DATABASE = os.path.join(BASE_DIR, 'StudentID.db') 
 
 app = Flask(__name__)
 
@@ -48,12 +50,12 @@ def signup():
     #if the user posts from the signup page
     if request.method == "POST":
         #add the new username and hashed password to the database
-        username = request.form['username']
+        username = request.form['email']
         password = request.form['password']
         #hash it with the cool secutiry function
         hashed_password = generate_password_hash(password)
         #write it as a new user to the database
-        sql = "INSERT INTO Students (Username,Password) VALUES (?,?)"
+        sql = "INSERT INTO Students (Email,Password) VALUES (?,?)"
         write_db(sql,(username,hashed_password))
         #message flashes exist in the base.html template and give user feedback
         flash("Sign Up Successful")
@@ -65,18 +67,17 @@ def login():
     #if the user posts a username and password
     if request.method == "POST":
         #get the username and password
-        username = request.form['username']
+        username = request.form['email']
         password = request.form['password']
         #try to find this user in the database- note- just keepin' it simple so usernames must be unique
         sql = "SELECT * FROM Student WHERE Username = ?"
         user = query_db(sql,(username,),True)
         if user:
-            #we got a user!!
             #check password matches-
             if check_password_hash(user[2],password):
                 #we are logged in successfully
                 #Store the username in the session
-                session['Student'] = user['Username']
+                session['Student'] = user['Email']
                 flash("Logged in successfully")
             else:
                 flash("Password incorrect")

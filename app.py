@@ -5,7 +5,7 @@ import os
 from werkzeug.security import generate_password_hash, check_password_hash
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DATABASE = os.path.join(BASE_DIR, 'StudentID.db') 
+DATABASE = os.path.join(BASE_DIR, 'database.db') 
 
 app = Flask(__name__)
 
@@ -70,14 +70,14 @@ def login():
         username = request.form['email']
         password = request.form['password']
         #try to find this user in the database- note- just keepin' it simple so usernames must be unique
-        sql = "SELECT * FROM Student WHERE Username = ?"
+        sql = "SELECT * FROM Students WHERE Email = ?"
         user = query_db(sql,(username,),True)
         if user:
             #check password matches-
             if check_password_hash(user[2],password):
                 #we are logged in successfully
                 #Store the username in the session
-                session['Student'] = user['Email']
+                session['Students'] = user['Email']
                 flash("Logged in successfully")
             else:
                 flash("Password incorrect")

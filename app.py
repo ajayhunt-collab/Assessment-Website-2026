@@ -74,7 +74,7 @@ def login():
         user = query_db(sql,(username,),True)
         if user:
             #check password matches-
-            if check_password_hash(user[2],password):
+            if check_password_hash(['Password'],password):
                 #we are logged in successfully
                 #Store the username in the session
                 session['Students'] = user['Email']

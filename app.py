@@ -43,7 +43,17 @@ def write_db(query,args=(),one=False):
 @app.route('/')
 @app.route('/home')
 def home():
-    return render_template('home.html')
+    # Queries your Sports table to feed data into the home page design
+    sql = "SELECT * FROM Sports"
+    all_sports = query_db(sql)
+    return render_template('home.html', sports=all_sports)
+
+@app.route('/sports')
+def sports():
+    #Fetch all sports from a 'Sports' table in your database
+    sql = "SELECT * FROM Sports"
+    all_sports = query_db(sql)
+    return render_template('sports.html', sports=all_sports)
 
 @app.route('/signup', methods=["GET","POST"])
 def signup():
@@ -74,7 +84,7 @@ def login():
         user = query_db(sql,(username,),True)
         if user:
             #check password matches-
-            if check_password_hash(['Password'],password):
+            if check_password_hash(user['Password'],password):
                 #we are logged in successfully
                 #Store the username in the session
                 session['Students'] = user['Email']
@@ -88,8 +98,8 @@ def login():
 
 @app.route('/logout')
 def logout():
-    session.pop('User', None)
-    flash("You have been logged out")
+    session.pop('Students', None)
+    flash("You have been logged out successfully")
     return redirect(url_for('home'))
 
 if __name__ == "__main__":

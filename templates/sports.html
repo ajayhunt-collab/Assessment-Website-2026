@@ -1,0 +1,16 @@
+{% extends 'layout.html' %}
+{% block content %}
+
+<h2>School Teams By Sport</h2>
+<div class="three-coloumn">
+    {% for team in teams %}
+            <h3>{{ team['SportName'] }} - {{ team['TeamName'] }}</h3>
+            <!-- Add any other column fields you have in your Teams table here -->
+            <p>Coach: {{ team['Coach'] }}</p> 
+        </div>
+    {% else %}
+        <p>No teams are currently listed.</p>
+    {% endfor %}
+</div>
+
+{% endblock %}

@@ -13,16 +13,23 @@
     </header>
 
     <nav>
-        <ul>
-            <li><a href="{{ url_for('home') }}">Home</a></li>
-            <li><a href="{{ url_for('login') }}">Login</a><li>
-            <li><a href="{{ url_for('signup') }}">Signup</a><li>
-        </ul>
+        <a href="{{ url_for('home') }}">Home</a> | 
+        <a href="{{ url_for('sports') }}">Sports</a> |
+
+
+        {% if session.get('Students') %}
+            Logged in as: {{ session['Students'] }} | 
+            <a href="{{ url_for('logout') }}">Logout</a>
+        {% else %}
+            <a href="{{ url_for('login') }}">Login</a> | 
+            <a href="{{ url_for('signup') }}">Sign Up</a>
+        {% endif %}
     </nav>
 
-    <main>
-        {% block content %}
-        {% endblock %}
-    </main>
+    <hr>
+
+    {% block content %}
+    {% endblock %}
+
 </body>
 </html>

@@ -1,15 +1,39 @@
-body,h1,h2,h3,h4,h5,h6 {
-    font-family: Righteous, sans-serif;
+header {
+    background-color: darkblue; /* Navy Blue */
+    color: white;
+    padding: 1.5em;
+    text-align: center;
 }
 
-.three-coloumn{
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 2em;
+nav {
+    background-color: red; /* Dark Red */
+    color: white;
+    padding: 0.8em;
 }
 
-.two-coloumn{
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 3em;
+nav a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+/* Home Page Component Styles */
+.sport-card {
+    border: 3px solid darkblue; /* Navy Blue Border */
+    padding: 1.5em;
+    text-align: center;
+    border-radius: 4px;
+    background-color: #ffffff;
+}
+
+.notices-sidebar {
+    border-left: 2px solid white;
+    padding-left: 1.5em;
+}
+
+footer {
+    margin-top: 2em;
+    border-top: 2px solid darkblue;
+    padding: 1em 0;
+    font-size: 0.9em;
 }

@@ -1,13 +1,54 @@
 {% extends 'layout.html' %}
 {% block content %}
-<h1>Signup</h1>
-<!-- A form to login with -->
-<!-- the ACTION is the route we try to post to! -->
-<form action="/signup" method="post">
-    <label for="email">Email</label>
-    <input type="email" name="email">
-    <label for="password">Password</label>
-    <input type="password" name="password">
-    <button type="submit">Signup</button>
-</form>
+<div class="signup-page-container">
+    <div class="signup-card">
+        <h2>Sign Up</h2>
+        <p class="subtitle">Choose account type</p>
+        
+        <form action="/signup" method="post">
+            <!-- All 3 selection options contained properly inside the card -->
+            <div class="account-type-grid">
+                <label class="type-card">
+                    <input type="radio" name="account_type" value="parent" required>
+                    <div class="card-content">
+                        <span>Parents or Caregivers</span>
+                    </div>
+                </label>
+
+                <label class="type-card">
+                    <input type="radio" name="account_type" value="student" checked required>
+                    <div class="card-content">
+                        <span>Student</span>
+                    </div>
+                </label>
+
+                <label class="type-card">
+                    <input type="radio" name="account_type" value="staff" required>
+                    <div class="card-content">
+                        <span>School Staff</span>
+                    </div>
+                </label>
+            </div>
+
+            <!-- Credentials Input Fields -->
+            <div class="credential-fields">
+                <div class="input-group">
+                    <label for="email">School Email</label>
+                    <input type="email" id="email" name="email" required placeholder="name@school.com">
+                </div>
+                
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required placeholder="••••••••">
+                </div>
+            </div>
+
+            <div class="help-section">
+                <a href="#" class="help-link">Help</a>
+            </div>
+            
+            <button type="submit" class="signup-submit-btn">Create Account & Enter</button>
+        </form>
+    </div>
+</div>
 {% endblock %}

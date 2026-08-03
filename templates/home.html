@@ -1,43 +1,39 @@
 {% extends "layout.html" %}
-
 {% block content %}
 
-<!-- Two-Column Layout split between Sports and Achievements/Notices -->
-<div class="two-coloumn" style="margin-top: 1.5em;">
+<div class="home-main-layout">
     
-    <!-- Left Column: Grid of Sports Cards -->
-    <div>
-        <h3>Available Sports Codes</h3>
-        <div class="three-coloumn">
+    <!-- Left Column: Sports Grid -->
+    <div class="sports-section-box">
+        <div class="sports-grid-container">
             {% for sport in sports %}
-                <div class="sport-card">
+                <div class="wireframe-sport-card">
                     <h4>{{ sport['SportName'] }}</h4>
-                    <!-- Link to a specific details/teams page if needed later -->
                 </div>
             {% else %}
-                <div class="sport-card"><h4>Sport 1</h4></div>
-                <div class="sport-card"><h4>Sport 2</h4></div>
-                <div class="sport-card"><h4>Sport 3</h4></div>
+                <div class="wireframe-sport-card"><h4>No sports found.</h4></div>
             {% endfor %}
         </div>
     </div>
 
-    <!-- Right Column: Achievements & Notices Sidebar -->
-    <div class="notices-sidebar">
-        <h3>Sports Achievements & Notices</h3>
-        <ul style="list-style-type: square; padding-left: 1.2em;">
+    <!-- Right Column: Sidebar -->
+    <div class="notices-sidebar-box">
+        <h3>Sports Achievements/Notices</h3>
+        <ul class="notices-list">
             <li>Senior A is the best!</li>
+            <li>Practice times updated for winter codes.</li>
         </ul>
     </div>
 
 </div>
 
-<!-- Bottom Section: Help & About -->
-<footer>
-    <h4>Help & About</h4>
-    <p>Welcome to the Catholic Cathedral College Sports portal. 
-        If you need registration assistance or have questions regarding upcoming seasons, 
-        please visit the Sports Coordinator in the main office or contact us via email.</p>
+<!-- Bottom Section -->
+<footer class="wireframe-footer">
+    <div class="footer-meta-text">Colours: School colours (Navy blue, red, white)</div>
+    <div class="footer-main-content">
+        <h3>Help & About</h3>
+        <p>Welcome to the Catholic Cathedral College Sports portal.</p>
+    </div>
 </footer>
 
 {% endblock %}

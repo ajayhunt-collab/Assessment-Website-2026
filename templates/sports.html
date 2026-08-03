@@ -1,12 +1,14 @@
 {% extends 'layout.html' %}
 {% block content %}
 
-<h2>School Teams By Sport</h2>
+<h2>Catholic Cathedral College - Basketball Teams</h2>
 <div class="three-coloumn">
     {% for team in teams %}
-            <h3>{{ team['SportName'] }} - {{ team['TeamName'] }}</h3>
-            <!-- Add any other column fields you have in your Teams table here -->
-            <p>Coach: {{ team['Coach'] }}</p> 
+        <div class="wireframe-sport-card" style="margin-bottom: 1em;">
+            <!-- Displays Sport name and Team Color directly from your schema -->
+            <h3>{{ team['SportID'] }} — {{ team['TeamID'] }}</h3>
+            <p>Coach Email: {{ team['CoachEmail'] or 'TBA' }}</p>
+            <a href="/team/{{ team['TeamID'] }}" class="help-link" style="display: block; margin-top: 1em;">View Player Roster</a>
         </div>
     {% else %}
         <p>No teams are currently listed.</p>

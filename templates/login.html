@@ -1,13 +1,30 @@
 {% extends 'layout.html' %}
 {% block content %}
-<h1>Login</h1>
-<!-- A form to login with -->
-<!-- POST to the LOGIN route this is set by the action value -->
-<form action="/login" method="post">
-    <label for="email">Email</label>
-    <input type="email" name="email">
-    <label for="password">Password</label>
-    <input type="password" name="password">
-    <button type="submit">Login</button>
-</form>
+<div class="signup-page-container">
+    <div class="signup-card">
+        <h2>Login</h2>
+        <p class="subtitle">Access the Sports Portal</p>
+        
+        <form action="/login" method="post">
+            <div class="credential-fields">
+                <div class="input-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" name="email" required placeholder="name@school.com">
+                </div>
+                
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required placeholder="••••••••">
+                </div>
+            </div>
+            
+            <div class="help-section" style="margin-bottom: 1.5em; text-align: right;">
+                <!-- ADD THIS LINE TO CROSS-LINK BACK TO SIGNUP -->
+                <p style="margin: 0; font-size: 0.9em;">Need an account? <a href="{{ url_for('signup') }}" class="help-link">Sign up here</a></p>
+            </div>
+            
+            <button type="submit" class="signup-submit-btn">Login & Enter</button>
+        </form>
+    </div>
+</div>
 {% endblock %}

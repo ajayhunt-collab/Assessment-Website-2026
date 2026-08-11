@@ -38,30 +38,21 @@ def write_db(query, args=(), one=False):
     return (rv[0] if rv else None) if one else rv
 
 
-# --- GLOBAL GATEKEEPER SECURITY WALL ---
 @app.before_request
 def lock_down_routes():
-    # 1. Always let CSS/static design files through so the sign-up page looks right
     if request.endpoint == 'static':
         return
 
-    # 2. Allow access to signup and login paths explicitly
     allowed_routes = ['signup', 'login']
     if request.endpoint in allowed_routes:
         return
 
-    # 3. If the user is NOT logged into the session, intercept and force them to sign up
     if not session.get('Students'):
         flash("Please sign up or login to access the portal.")
         return redirect(url_for('signup'))
 
-
-# --- ROUTES AND ENDPOINTS ---
-
 @app.route('/')
-# --- UPDATE THESE TWO ROUTES AT THE TOP OF YOUR ENDPOINTS SECTION ---
 def index():
-    # 1. Force the root page to instantly evaluate the login wall
     if not session.get('Students'):
         return redirect(url_for('signup'))
     return redirect(url_for('home'))
@@ -77,12 +68,10 @@ def signup():
         sql = "INSERT INTO Students (Email,Password) VALUES (?,?)"
         write_db(sql, (username, hashed_password))
         
-        # Log them into the session
         session['Students'] = username
         flash("Sign Up Successful!")
         return redirect(url_for('home'))
         
-    # If authenticated, don't show the sign-up form, push them home
     if session.get('Students'):
         return redirect(url_for('home'))
         
@@ -90,7 +79,6 @@ def signup():
 
 @app.route('/home')
 def home():
-    # Pulls sports cards out of the table using your column
     sql = "SELECT * FROM Sports"
     all_sports = query_db(sql)
     return render_template('home.html', sports=all_sports)
@@ -98,11 +86,26 @@ def home():
 
 @app.route('/sports')
 def sports():
-    # Fetches all sports listed for the secondary grid sub-page if needed
-    sql = "SELECT * FROM Sports"
-    all_sports = query_db(sql)
-    return render_template('sports.html', sports=all_sports)
+    # This query joins your teams with their coaches dynamically
+    sql = """
+        SELECT Teams.TeamID, Teams.SportID, "Teachers/Coaches".Email AS CoachEmail 
+        FROM Teams 
+        LEFT JOIN "Teachers/Coaches" ON Teams.TeamID = "Teachers/Coaches".TeamID
+    """
+    all_teams = query_db(sql)
+    return render_template('sports.html', teams=all_teams) # Passing 'teams'
 
+@app.route('/team/<team_id>')
+def team_detail(team_id):
+    allowed_teams = ['Senior A', 'Senior Yellow', 'Senior Red', 'Senior Black', 'Senior Green', 'Senior Blue']
+    if team_id not in allowed_teams:
+        flash("Invalid team selection.")
+        return redirect(url_for('sports'))
+    
+    sql = f'SELECT * FROM [{team_id}]'
+    team_players = query_db(sql)
+    
+    return render_template('team_detail.html', team_id=team_id, players=team_players)
 
 @app.route('/login', methods=["GET", "POST"])
 def login():

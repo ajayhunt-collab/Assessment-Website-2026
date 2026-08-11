@@ -1,0 +1,26 @@
+{% extends 'layout.html' %}
+{% block content %}
+
+<div style="padding: 2em; max-width: 600px; margin: 0 auto; border: 5px solid black; background: white; box-shadow: 4px 4px 0 black;">
+    <h2>Roster: {{ team_id }}</h2>
+    <p>Below are the registered players for this squad:</p>
+    <hr style="border: 2px solid black; margin-bottom: 1.5em;">
+
+    <ol class="notices-list" style="font-size: 1.2em; font-weight: bold;">
+        {% for player in players %}
+            <li style="margin-bottom: 0.5em;">
+                {{ player['Players'] }} 
+                <span style="font-weight: normal; font-size: 0.8em; color: #666;">
+                    (ID: {{ player['StudentID'] or 'Not Linked' }})
+                </span>
+            </li>
+        {% else %}
+            <li>No players found in this team table yet.</li>
+        {% endfor %}
+    </ol>
+
+    <br>
+    <a href="{{ url_for('sports') }}" class="signup-submit-btn" style="text-decoration: none; display: inline-block; text-align: center;">← Back to Teams</a>
+</div>
+
+{% endblock %}

@@ -11,17 +11,22 @@
     <!-- Header layout matching wireframe split -->
     <header class="wireframe-header">
         <div class="logo-box">
-            <h2>Logo</h2>
+            <img src="{{ url_for('static', filename='logo.jpg') }}" alt="CCC Crest" style="height: 100%; width: auto; object-fit: contain;">
         </div>
         <div class="title-nav-box">
             <h1>Catholic Cathedral College Sports</h1>
             
             {% if session.get('Students') %}
             <nav class="header-nav">
-                <a href="{{ url_for('home') }}">Home</a>
-                <a href="{{ url_for('sports') }}">Sports</a>
-                <span class="user-tag">| {{ session['Students'] }}</span>
-                <a href="{{ url_for('logout') }}" class="logout-btn">Logout</a>
+                <div class="nav-links">
+                    <a href="{{ url_for('home') }}">Home</a>
+                    <a href="{{ url_for('sports') }}">Sports</a>
+                </div>
+                <div class="user-meta">
+                    <!-- Removed raw divider and wrapped email cleanly -->
+                    <span class="user-tag">{{ session['Students'] }}</span>
+                    <a href="{{ url_for('logout') }}" class="logout-btn">Logout</a>
+                </div>
             </nav>
             {% endif %}
         </div>

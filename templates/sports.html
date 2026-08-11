@@ -3,9 +3,9 @@
 
 <h2>Catholic Cathedral College - Basketball Teams</h2>
 <div class="three-coloumn">
+    <!-- Change 'sport in sports' to 'team in teams' -->
     {% for team in teams %}
         <div class="wireframe-sport-card" style="margin-bottom: 1em;">
-            <!-- Displays Sport name and Team Color directly from your schema -->
             <h3>{{ team['SportID'] }} — {{ team['TeamID'] }}</h3>
             <p>Coach Email: {{ team['CoachEmail'] or 'TBA' }}</p>
             <a href="/team/{{ team['TeamID'] }}" class="help-link" style="display: block; margin-top: 1em;">View Player Roster</a>

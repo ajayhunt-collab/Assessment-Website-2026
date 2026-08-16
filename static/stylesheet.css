@@ -180,34 +180,31 @@ body {
     color: #000000;
 }
 
-/* Update your card maximum width so three choices fit comfortably */
 .signup-card {
     background-color: white;
     padding: 2.5em;
     border: 5px solid black;
     text-align: center;
     width: 100%;
-    max-width: 550px; /* Increased from 450px to fit 3 options */
+    max-width: 550px; 
     box-shadow: 0 4px 15px black;
 }
 
-/* Adjust layout grid properties for three elements */
 .account-type-grid {
     border: 4px solid black;
     padding: 1em;
     display: flex;
-    gap: 0.8em; /* Closer spacing to fit labels */
+    gap: 0.8em;
     justify-content: center;
     background-color: white;
     margin-bottom: 1.5em;
 }
 
-/* Adjust card inner label properties for clean text wrapping */
 .type-card .card-content {
     border: 3px solid #000000;
-    padding: 1.2em 0.4em; /* Optimized padding spacing */
+    padding: 1.2em 0.4em; 
     font-weight: bold;
-    font-size: 0.85em; /* Slightly smaller text size so strings don't break awkwardly */
+    font-size: 0.85em; /* Slightly smaller text size so strings don't break */
     transition: all 0.2s ease;
     background-color: white;
     display: flex;

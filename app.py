@@ -69,7 +69,6 @@ def signup():
         write_db(sql, (username, hashed_password))
         
         session['Students'] = username
-        flash("Sign Up Successful!")
         return redirect(url_for('home'))
         
     if session.get('Students'):
@@ -119,7 +118,6 @@ def login():
         if user:
             if check_password_hash(user['Password'], password):
                 session['Students'] = user['Email']
-                flash("Logged in successfully")
                 return redirect(url_for('home'))
             else:
                 flash("Password incorrect")
@@ -132,7 +130,6 @@ def login():
 @app.route('/logout')
 def logout():
     session.pop('Students', None)
-    flash("You have been logged out successfully")
     return redirect(url_for('signup'))
 
 

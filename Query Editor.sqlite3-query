@@ -1,9 +1,28 @@
 -- database: ./database.db
 
-SELECT * FROM Teams
-ORDER BY TeamID ASC;
+DELETE FROM Students WHERE Firstname IS NULL AND Surname IS NULL;
 
-SELECT * FROM Students
-ORDER BY StudentID ASC;
+CREATE TABLE IF NOT EXISTS Rosters (
+    StudentID INTEGER,
+    Players TEXT NOT NULL,
+    TeamID TEXT NOT NULL,
+    PRIMARY KEY (Players, TeamID)
+);
 
-SELECT * FROM Sports;
+INSERT OR IGNORE INTO Rosters (Players, TeamID) SELECT Players, 'Senior A' FROM [Senior A];
+INSERT OR IGNORE INTO Rosters (Players, TeamID) SELECT Players, 'Senior Black' FROM [Senior Black];
+INSERT OR IGNORE INTO Rosters (Players, TeamID) SELECT Players, 'Senior Blue' FROM [Senior Blue];
+INSERT OR IGNORE INTO Rosters (Players, TeamID) SELECT Players, 'Senior Green' FROM [Senior Green];
+INSERT OR IGNORE INTO Rosters (Players, TeamID) SELECT Players, 'Senior Red' FROM [Senior Red];
+INSERT OR IGNORE INTO Rosters (Players, TeamID) SELECT Players, 'Senior Yellow' FROM [Senior Yellow];
+
+UPDATE Rosters
+SET StudentID = (
+    SELECT Students.StudentID 
+    FROM Students 
+    WHERE LOWER(Students.Firstname || ' ' || Students.Surname) = LOWER(Rosters.Players)
+)
+WHERE StudentID IS NULL;
+
+UPDATE Sports SET SportID = 'Basketball' WHERE SportID LIKE 'Baskebtall%';
+UPDATE Teams SET SportID = 'Basketball' WHERE SportID LIKE 'Baskebtall%';

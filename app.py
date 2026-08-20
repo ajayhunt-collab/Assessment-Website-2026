@@ -16,6 +16,54 @@ def get_db():
         db.row_factory = sqlite3.Row
     return db
 
+def setup_and_migrate_database():
+    """Automatically builds the master Rosters table and copies data if missing."""
+    conn = sqlite3.connect(DATABASE)
+    cursor = conn.cursor()
+    
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS Rosters (
+            StudentID INTEGER,
+            Players TEXT NOT NULL,
+            TeamID TEXT NOT NULL,
+            PRIMARY KEY (Players, TeamID)
+        );
+    """)
+    
+    cursor.execute("SELECT COUNT(*) FROM Rosters;")
+    if cursor.fetchone()[0] == 0:
+        print("Migrating color squads into the master Rosters table...")
+        
+        # Safe migration loop from old tables if they exist
+        old_tables = ['Senior A', 'Senior Black', 'Senior Blue', 'Senior Green', 'Senior Red', 'Senior Yellow']
+        for table in old_tables:
+            try:
+                cursor.execute(f"INSERT OR IGNORE INTO Rosters (Players, TeamID) SELECT Players, '{table}' FROM [{table}]")
+                print(f"Successfully migrated {table} roster!")
+            except sqlite3.OperationalError:
+                # Skips gracefully if the old table was already dropped or missing
+                pass
+                
+
+        cursor.execute("""
+            UPDATE Rosters
+            SET StudentID = (
+                SELECT Students.StudentID 
+                FROM Students 
+                WHERE LOWER(Students.Firstname || ' ' || Students.Surname) = LOWER(Rosters.Players)
+            )
+            WHERE StudentID IS NULL;
+        """)
+        
+    try:
+        cursor.execute("UPDATE Sports SET SportID = 'Basketball' WHERE SportID LIKE 'Baskebtall%';")
+        cursor.execute("UPDATE Teams SET SportID = 'Basketball' WHERE SportID LIKE 'Baskebtall%';")
+    except sqlite3.OperationalError:
+        pass
+        
+    conn.commit()
+    conn.close()
+
 @app.teardown_appcontext
 def close_connection(exception):
     db = getattr(g, '_database', None)
@@ -82,6 +130,19 @@ def home():
     all_sports = query_db(sql)
     return render_template('home.html', sports=all_sports)
 
+@app.route('/sport/<sport_id>')
+def sport_teams(sport_id):
+    sql = """
+        SELECT Teams.TeamID, Teams.SportID, "Teachers/Coaches".Email AS CoachEmail 
+        FROM Teams 
+        LEFT JOIN "Teachers/Coaches" ON Teams.TeamID = "Teachers/Coaches".TeamID
+        WHERE LOWER(Teams.SportID) = LOWER(?)
+    """
+    selected_teams = query_db(sql, (sport_id,))
+    
+    return render_template('sports.html', teams=selected_teams, sport_title=sport_id)
+
+
 
 @app.route('/sports')
 def sports():
@@ -96,13 +157,12 @@ def sports():
 
 @app.route('/team/<team_id>')
 def team_detail(team_id):
-    allowed_teams = ['Senior A', 'Senior Yellow', 'Senior Red', 'Senior Black', 'Senior Green', 'Senior Blue']
-    if team_id not in allowed_teams:
-        flash("Invalid team selection.")
-        return redirect(url_for('sports'))
+    sql = "SELECT * FROM Rosters WHERE TeamID = ?"
+    team_players = query_db(sql, (team_id,))
     
-    sql = f'SELECT * FROM [{team_id}]'
-    team_players = query_db(sql)
+    if not team_players:
+        flash("No roster found for the selected team.")
+        return redirect(url_for('sports'))
     
     return render_template('team_detail.html', team_id=team_id, players=team_players)
 
@@ -134,4 +194,5 @@ def logout():
 
 
 if __name__ == "__main__":
+    setup_and_migrate_database()
     app.run(host="0.0.0.0", port=5000, debug=True)

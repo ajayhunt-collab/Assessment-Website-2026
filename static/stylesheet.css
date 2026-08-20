@@ -10,12 +10,21 @@ body {
 .wireframe-header {
     display: flex;
     border-bottom: 5px solid #000000;
-    background-color: darkblue; /* Navy Blue Base */
+    background-color: darkblue; 
     color: white;
-    align-items: flex;
+    align-items: center;
     justify-content: flex-start;
     box-sizing: border-box;
+    height: 120px; 
 }
+
+.sports-grid-container a {
+    text-decoration: none;
+    color: inherit;
+    display: block;  /* Makes the link expand to fill the grid slot */
+    width: 100%;     /* Prevents horizontal collapsing */
+}
+
 
 .logo-box {
     width: 150px;
@@ -45,32 +54,46 @@ body {
     font-size: 1.8em;
 }
 
-/* Navigation links bar styled cleanly inside header space */
 .header-nav {
     display: flex;
     gap: 1.5em;
     align-items: center;
-    background-color: red; /* Dark Red Accents */
-    padding: 0.5em 1em;
+    background-color: red;
+    padding: 0.6em 1.2em;
     border-radius: 4px;
+    width: max-content;
+    white-space: nowrap;
+    color: #ffffff;
 }
 
 .header-nav a {
-    color: white;
+    color: #ffffff !important;
     text-decoration: none;
     font-weight: bold;
+    font-size: 0.95em;
 }
 
 .header-nav a:hover {
     text-decoration: underline;
+    color: #e0e0e0 !important;
 }
 
 .user-tag {
+    color: #ffffff;
+    font-weight: bold;
     font-size: 0.9em;
     opacity: 0.9;
 }
 
-/* Main Split Screen Area Layout Rules */
+
+.user-meta {
+    display: flex;
+    align-items: center;
+    gap: 1em; /* Creates a clean gap between the email address and the logout button */
+    border-left: 2px solid white;
+    padding-left: 1em;
+}
+
 .home-main-layout {
     display: flex;
     min-height: 400px;

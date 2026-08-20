@@ -1,7 +1,8 @@
 {% extends 'layout.html' %}
 {% block content %}
 
-<h2>Catholic Cathedral College - Basketball Teams</h2>
+<h2>Catholic Cathedral College - {{ sport_title or 'All' }} Teams</h2>
+
 <div class="three-coloumn">
     <!-- Change 'sport in sports' to 'team in teams' -->
     {% for team in teams %}

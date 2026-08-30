@@ -183,7 +183,7 @@ body {
     align-items: center;
     padding: 3em 1em;
     /* Uses CCC School Colors (Navy Blue to Dark Red gradient) for the background wrapper */
-    background: linear-gradient(darkblue, red); 
+    background: darkblue; 
     min-height: 70vh;
 }
 

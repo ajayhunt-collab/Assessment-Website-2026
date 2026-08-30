@@ -96,7 +96,6 @@ def lock_down_routes():
         return
 
     if not session.get('Students'):
-        flash("Please sign up or login to access the portal.")
         return redirect(url_for('signup'))
 
 @app.route('/')
@@ -165,6 +164,63 @@ def team_detail(team_id):
         return redirect(url_for('sports'))
     
     return render_template('team_detail.html', team_id=team_id, players=team_players)
+
+@app.route('/team/<team_id>/join', methods=["POST"])
+def join_team(team_id):
+    student_email = session.get('Students')
+    if not student_email:
+        flash("You must be logged in to register for a sport.")
+        return redirect(url_for('login'))
+        
+    student_info = query_db("SELECT StudentID, Firstname, Surname FROM Students WHERE LOWER(Email) = ?", (student_email.lower(),), True)
+    
+    if not student_info:
+        flash("Profile matching your login session could not be found.")
+        return redirect(url_for('home'))
+        
+    student_id = student_info['StudentID']
+    full_name = f"{student_info['Firstname']} {student_info['Surname']}"
+
+    check_sql = "SELECT * FROM Rosters WHERE StudentID = ? AND TeamID = ?"
+    already_joined = query_db(check_sql, (student_id, team_id), True)
+    
+    if already_joined:
+        flash(f"You are already registered on the roster for {team_id}!")
+        return redirect(url_for('team_detail', team_id=team_id))
+        
+    insert_sql = "INSERT INTO Rosters (StudentID, Players, TeamID) VALUES (?, ?, ?)"
+    write_db(insert_sql, (student_id, full_name, team_id))
+    
+    return redirect(url_for('team_detail', team_id=team_id))
+
+@app.route('/team/<team_id>/leave', methods=["POST"])
+def leave_team(team_id):
+    if not session.get('StudentID'):
+        flash("You must be logged in to modify a roster.")
+        return redirect(url_for('login'))
+        
+    student_id = session['StudentID']
+    
+    check_sql = "SELECT * FROM Rosters WHERE StudentID = ? AND TeamID = ?"
+    on_team = query_db(check_sql, (student_id, team_id), True)
+    
+    if not on_team:
+        flash("You cannot leave a team you are not registered for.")
+        return redirect(url_for('team_detail', team_id=team_id))
+        
+    # 3. Execute the deletion safely using a parameterized query
+    delete_sql = "DELETE FROM Rosters WHERE StudentID = ? AND TeamID = ?"
+    write_db(delete_sql, (student_id, team_id))
+    
+    return redirect(url_for('team_detail', team_id=team_id))
+
+@app.route('/team/<team_id>/remove/<target_student_id>', methods=["POST"])
+def admin_remove_player(team_id, target_student_id):
+    # If the user is logged in as a staff member, allow them to pass ANY student ID to clear it
+    if session.get('AccountType') == 'staff':
+        write_db("DELETE FROM Rosters WHERE StudentID = ? AND TeamID = ?", (target_student_id, team_id))
+    return redirect(url_for('team_detail', team_id=team_id))
+
 
 @app.route('/login', methods=["GET", "POST"])
 def login():

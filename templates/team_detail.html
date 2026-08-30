@@ -8,17 +8,36 @@
 
     <ol class="notices-list" style="font-size: 1.2em; font-weight: bold;">
         {% for player in players %}
-            <li style="margin-bottom: 0.5em;">
-                {{ player['Players'] }} 
-                <span style="font-weight: normal; font-size: 0.8em; color: #666;">
-                    (ID: {{ player['StudentID'] or 'Not Linked' }})
-                </span>
+            <li style="margin-bottom: 0.5em; display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    {{ player['Players'] }} 
+                    <span style="font-weight: normal; font-size: 0.8em; color: #666;">
+                        (ID: {{ player['StudentID'] or 'Not Linked' }})
+                    </span>
+                </div>
+                {% if session.get('StudentID') and session['StudentID']|string == player['StudentID']|string %}
+                    <form action="{{ url_for('leave_team', team_id=team_id) }}" method="POST" style="margin: 0;" onsubmit="return confirm('Are you sure you want to leave this team?');">
+                        <button type="submit" class="logout-btn" style="background: red; color: white; border: none; padding: 0.2em 0.6em; font-size: 0.75em; border-radius: 4px; cursor: pointer; font-weight: bold;">
+                            Leave Team
+                        </button>
+                    </form>
+                {% endif %}
             </li>
         {% else %}
             <li>No players found in this team table yet.</li>
         {% endfor %}
     </ol>
 
+    <div style="margin-top: 2em; border: 3px dashed black; padding: 1.5em; text-align: center;">
+        <h3>Want to play for {{ team_id }}?</h3>
+        <p style="font-size: 0.9em; color: #555; margin-bottom: 1em;">Clicking below will add you to this team's roster instantly.</p>
+    
+        <form action="{{ url_for('join_team', team_id=team_id) }}" method="POST">
+            <button type="submit" class="signup-submit-btn" style="background-color: darkblue;">
+                Register for this Squad
+            </button>
+        </form>
+    </div>
     <br>
     <a href="{{ url_for('sports') }}" class="signup-submit-btn" style="text-decoration: none; text-align: center;">← Back to Teams</a>
 </div>

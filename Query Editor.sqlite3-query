@@ -26,3 +26,13 @@ WHERE StudentID IS NULL;
 
 UPDATE Sports SET SportID = 'Basketball' WHERE SportID LIKE 'Baskebtall%';
 UPDATE Teams SET SportID = 'Basketball' WHERE SportID LIKE 'Baskebtall%';
+
+
+INSERT INTO users (Email, Firstname, Surname, created_at)
+VALUES (
+    TRIM(LOWER('  FirstName.LastName@cathcollege.school.nz  ')), 
+    INITCAP(SPLIT_PART(SPLIT_PART(TRIM('  FirstName.LastName@cathcollege.school.nz  '), '@', 1), '.', 1)),
+    INITCAP(SPLIT_PART(SPLIT_PART(TRIM('  FirstName.LastName@cathcollege.school.nz  '), '@', 1), '.', 2)),
+    NOW()
+);
+
